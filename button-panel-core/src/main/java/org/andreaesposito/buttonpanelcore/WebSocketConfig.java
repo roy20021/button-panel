@@ -10,15 +10,19 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
+    public static final String STOMP_ENDPOINT = "/stompEndpoint";
+    public static final String TOPIC = "/topic";
+    public static final String APP_DEST_PREFIX = "/buttonPanel";
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
-        config.setApplicationDestinationPrefixes("/buttonPanel");
+        config.enableSimpleBroker(TOPIC);
+        config.setApplicationDestinationPrefixes(APP_DEST_PREFIX);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/stompEndpoint").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint(STOMP_ENDPOINT).setAllowedOrigins("*").withSockJS();
     }
 
 }

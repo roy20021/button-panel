@@ -2,6 +2,7 @@ package org.andreaesposito.buttonpanelcore.service;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -18,12 +19,12 @@ public class SerialService implements Runnable {
     private static final String PREFERRED_SERIAL_PORT = "Button Panel - Preferred Serial Port";
 
     @Autowired
-    PublisherService publisherService;
+    private PublisherService publisherService;
 
-    private Optional<SerialPort> selectedPort;
+    private Optional<SerialPort> serialPort = Optional.empty();
     private Preferences preferences;
 
-    private Optional<Thread> listener;
+    private Optional<Thread> daemon = Optional.empty();
 
     @PostConstruct
     private void retrieveAndInitPreferredSerialPort() {
@@ -31,27 +32,29 @@ public class SerialService implements Runnable {
 
         Optional<String> preferredSerialPort = Optional.ofNullable(preferences.get(PREFERRED_SERIAL_PORT, null));
         if (preferredSerialPort.isPresent()) {
-            selectedPort = Optional.of(SerialPort.getCommPort(preferredSerialPort.get()));
+            serialPort = Optional.of(SerialPort.getCommPort(preferredSerialPort.get()));
             startListen();
         }
     }
 
     @PreDestroy
     private synchronized void stopListen() {
-        if (listener.isPresent()) {
-            listener.get().interrupt();
+        if (daemon.isPresent()) {
+            daemon.get().interrupt();
+            daemon = Optional.empty();
         }
-        if (selectedPort.isPresent()) {
-            selectedPort.get().closePort();
+        if (serialPort.isPresent()) {
+            serialPort.get().closePort();
         }
     }
 
-    private synchronized void startListen() {
-        if (selectedPort.isPresent() && !selectedPort.get().isOpen()) {
-            boolean succeed = selectedPort.get().openPort();
+    @Scheduled(fixedRate = 5000)
+    public synchronized void startListen() {
+        if (serialPort.isPresent() && !serialPort.get().isOpen()) {
+            boolean succeed = serialPort.get().openPort();
             if (succeed) {
-                listener = Optional.of(new Thread(this));
-                listener.get().start();
+                daemon = Optional.of(new Thread(this));
+                daemon.get().start();
             }
         }
     }
@@ -64,21 +67,25 @@ public class SerialService implements Runnable {
         stopListen(); // stop before move to new one
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(500); // Wait serial connection to physically be released
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //Nothing to do
         }
 
-        selectedPort = Stream.of(SerialPort.getCommPorts()).filter(port ->
+        // find serial port
+        serialPort = Stream.of(SerialPort.getCommPorts()).filter(port ->
                 portName.equals(port.getDescriptivePortName())).findFirst();
-        preferences.put(PREFERRED_SERIAL_PORT, selectedPort.get().getSystemPortName());
+
+        // set preferences with new selected port
+        preferences.put(PREFERRED_SERIAL_PORT, serialPort.get().getSystemPortName());
+
         startListen();
     }
 
     public Stream<String> getStream() {
-        if (selectedPort.isPresent()) {
-            selectedPort.get().setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 0);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(selectedPort.get().getInputStream()));
+        if (serialPort.isPresent()) {
+            serialPort.get().setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 500, 0);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(serialPort.get().getInputStream()));
             return reader.lines();
         }
         throw new IllegalStateException("No Serial Port Selected");
@@ -89,7 +96,7 @@ public class SerialService implements Runnable {
         try {
             this.getStream().forEach(str -> {
                 System.out.println(str);
-                publisherService.greeting();
+                publisherService.test(str);
             });
         } catch (RuntimeException e) {
             // Nothing to do

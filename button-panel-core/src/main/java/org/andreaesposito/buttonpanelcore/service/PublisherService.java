@@ -1,19 +1,25 @@
 package org.andreaesposito.buttonpanelcore.service;
 
 import org.andreaesposito.buttonpanelcore.beans.PanelEvent;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
-@Controller
+import static org.andreaesposito.buttonpanelcore.WebSocketConfig.TOPIC;
+
+@Service
 public class PublisherService {
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/panelEvents")
-    public PanelEvent greeting() {
+    public static final String TOPIC_NAME = "/panelEvents";
+
+    @Autowired
+    private SimpMessagingTemplate template;
+
+    public void test(String message) {
         PanelEvent event = new PanelEvent();
-        event.setButton("RED");
+        event.setButton("RED " + message);
         event.setMode(1);
-        return event;
+
+        template.convertAndSend(TOPIC + TOPIC_NAME, event);
     }
 }

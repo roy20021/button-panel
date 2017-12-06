@@ -7,7 +7,7 @@ import java.net.URL;
 public class ViewUtil {
 
     public static Image createButtonPanelImage() {
-        return ViewUtil.createImage("trayicon.png", "tray icon");
+        return ViewUtil.createImage("trayicon.png", "Button Panel Tray Icon");
     }
 
     //Obtain the image URL

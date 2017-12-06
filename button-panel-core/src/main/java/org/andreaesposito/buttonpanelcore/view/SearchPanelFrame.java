@@ -2,15 +2,15 @@ package org.andreaesposito.buttonpanelcore.view;
 
 import org.andreaesposito.buttonpanelcore.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 @Component
+@Scope("prototype")
 public class SearchPanelFrame extends JFrame {
 
     @Autowired
@@ -28,7 +28,7 @@ public class SearchPanelFrame extends JFrame {
         this.add(titleLablel);
 
         String[] serialPorts = serialService.getSerialPorts();
-        JComboBox serialPortsComboBox = new JComboBox(serialPorts);
+        JComboBox<String> serialPortsComboBox = new JComboBox<>(serialPorts);
         this.add(serialPortsComboBox);
 
         JButton selectBtn = new JButton("Select");

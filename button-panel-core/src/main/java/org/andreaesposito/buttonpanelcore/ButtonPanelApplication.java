@@ -4,10 +4,12 @@ import org.andreaesposito.buttonpanelcore.view.ButtonPanelTray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
+@EnableScheduling
 public class ButtonPanelApplication {
 
     @Autowired
