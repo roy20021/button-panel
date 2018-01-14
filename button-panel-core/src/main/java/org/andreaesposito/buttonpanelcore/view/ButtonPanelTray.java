@@ -1,5 +1,7 @@
 package org.andreaesposito.buttonpanelcore.view;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,8 @@ import java.awt.event.ActionListener;
 
 @Component
 public class ButtonPanelTray {
+
+    private static final Logger logger = LoggerFactory.getLogger(ButtonPanelTray.class);
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -37,7 +41,7 @@ public class ButtonPanelTray {
     private void createAndShowGUI() {
         //Check the SystemTray support
         if (!SystemTray.isSupported()) {
-            System.out.println("SystemTray is not supported");
+            logger.error("SystemTray is not supported");
             System.exit(-2);
         }
         final PopupMenu popup = new PopupMenu();
@@ -59,19 +63,12 @@ public class ButtonPanelTray {
         try {
             tray.add(trayIcon);
         } catch (AWTException e) {
-            System.out.println("TrayIcon could not be added.");
-            return;
+            logger.error("TrayIcon could not be added.", e);
+            System.exit(-2);
         }
 
         trayIcon.setImageAutoSize(true);
         trayIcon.setToolTip("Button Panel TrayIcon");
-
-        trayIcon.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null,
-                        "This dialog box is run from System Tray");
-            }
-        });
 
         searchItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

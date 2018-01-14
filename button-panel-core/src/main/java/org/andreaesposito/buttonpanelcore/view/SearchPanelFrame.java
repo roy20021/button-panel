@@ -24,16 +24,18 @@ public class SearchPanelFrame extends JFrame {
     private void init() {
         this.setLayout(new FlowLayout());
 
-        JLabel titleLablel = new JLabel("Select the serial port:");
-        this.add(titleLablel);
+        JLabel titleLabel = new JLabel("Select the serial port:");
+        this.add(titleLabel);
 
         String[] serialPorts = serialService.getSerialPorts();
         JComboBox<String> serialPortsComboBox = new JComboBox<>(serialPorts);
         this.add(serialPortsComboBox);
 
         JButton selectBtn = new JButton("Select");
-        selectBtn.addActionListener(e ->
-                serialService.setSerialPort(serialPorts[serialPortsComboBox.getSelectedIndex()])
+        selectBtn.addActionListener(e -> {
+                    serialService.setSerialPort(serialPorts[serialPortsComboBox.getSelectedIndex()]);
+                    this.dispose();
+                }
         );
         this.add(selectBtn);
 

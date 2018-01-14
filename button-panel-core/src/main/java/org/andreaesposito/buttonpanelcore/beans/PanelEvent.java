@@ -1,23 +1,37 @@
 package org.andreaesposito.buttonpanelcore.beans;
 
+import org.andreaesposito.buttonpanelcore.beans.PanelState.State;
+
 public class PanelEvent {
 
-    private String button;
-    private int mode;
-
-    public String getButton() {
-        return button;
+    public enum SourceType {
+        BUTTON, SWITCH
     }
 
-    public void setButton(String button) {
-        this.button = button;
+    private SourceType source;
+    private State state;
+
+    public State getState() {
+        return state;
     }
 
-    public int getMode() {
-        return mode;
+    public void setState(State state) {
+        this.state = state;
     }
 
-    public void setMode(int mode) {
-        this.mode = mode;
+    public SourceType getSource() {
+        return source;
+    }
+
+    public void setSource(SourceType source) {
+        this.source = source;
+    }
+
+    @Override
+    public String toString() {
+        return "PanelEvent{" +
+                "source=" + source +
+                ", state=" + state +
+                '}';
     }
 }

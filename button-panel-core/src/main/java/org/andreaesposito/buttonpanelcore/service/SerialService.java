@@ -1,7 +1,11 @@
 package org.andreaesposito.buttonpanelcore.service;
 
 import com.fazecast.jSerialComm.SerialPort;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.andreaesposito.buttonpanelcore.beans.SerialMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +18,13 @@ import java.util.prefs.Preferences;
 import java.util.stream.Stream;
 
 @Service
-public class SerialService implements Runnable {
+public class SerialService implements Runnable, ApplicationEventPublisherAware {
 
-    private static final String PREFERRED_SERIAL_PORT = "Button Panel - Preferred Serial Port";
+    private static final String PREFERRED_SERIAL_PORT = "ButtonPanel:PreferredSerialPort";
 
-    @Autowired
-    private PublisherService publisherService;
+    private static final Logger logger = LoggerFactory.getLogger(SerialService.class);
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private Optional<SerialPort> serialPort = Optional.empty();
     private Preferences preferences;
@@ -49,7 +54,7 @@ public class SerialService implements Runnable {
     }
 
     @Scheduled(fixedRate = 5000)
-    public synchronized void startListen() {
+    private synchronized void startListen() {
         if (serialPort.isPresent() && !serialPort.get().isOpen()) {
             boolean succeed = serialPort.get().openPort();
             if (succeed) {
@@ -76,6 +81,11 @@ public class SerialService implements Runnable {
         serialPort = Stream.of(SerialPort.getCommPorts()).filter(port ->
                 portName.equals(port.getDescriptivePortName())).findFirst();
 
+        if (!serialPort.isPresent()) {
+            logger.warn(portName + " not found");
+            return;
+        }
+
         // set preferences with new selected port
         preferences.put(PREFERRED_SERIAL_PORT, serialPort.get().getSystemPortName());
 
@@ -94,12 +104,18 @@ public class SerialService implements Runnable {
     @Override
     public void run() {
         try {
-            this.getStream().forEach(str -> {
-                System.out.println(str);
-                publisherService.test(str);
+            this.getStream().forEach(msg -> {
+                SerialMessage serialMessage = new SerialMessage(msg);
+                logger.trace("Received from serial: " + serialMessage);
+                applicationEventPublisher.publishEvent(serialMessage);
             });
         } catch (RuntimeException e) {
             // Nothing to do
         }
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }
