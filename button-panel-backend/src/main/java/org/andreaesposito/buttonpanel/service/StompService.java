@@ -1,9 +1,9 @@
-package org.andreaesposito.buttonpanelcore.service;
+package org.andreaesposito.buttonpanel.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import org.andreaesposito.buttonpanelcore.beans.PanelEvent;
+import org.andreaesposito.buttonpanel.beans.PanelEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.annotation.PostConstruct;
 
-import static org.andreaesposito.buttonpanelcore.WebSocketConfig.TOPIC;
+import static org.andreaesposito.buttonpanel.WebSocketConfig.TOPIC;
 
 @Controller
 public class StompService {

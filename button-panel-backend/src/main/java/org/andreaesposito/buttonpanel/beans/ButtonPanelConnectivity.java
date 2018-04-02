@@ -1,4 +1,4 @@
-package org.andreaesposito.buttonpanelcore.beans;
+package org.andreaesposito.buttonpanel.beans;
 
 import org.springframework.context.ApplicationEvent;
 

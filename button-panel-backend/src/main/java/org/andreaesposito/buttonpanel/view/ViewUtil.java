@@ -1,4 +1,4 @@
-package org.andreaesposito.buttonpanelcore.view;
+package org.andreaesposito.buttonpanel.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

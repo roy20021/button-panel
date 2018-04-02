@@ -1,6 +1,6 @@
-package org.andreaesposito.buttonpanelcore.view;
+package org.andreaesposito.buttonpanel.view;
 
-import org.andreaesposito.buttonpanelcore.service.SerialService;
+import org.andreaesposito.buttonpanel.service.SerialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

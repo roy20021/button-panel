@@ -1,7 +1,7 @@
-package org.andreaesposito.buttonpanelcore.service;
+package org.andreaesposito.buttonpanel.service;
 
-import org.andreaesposito.buttonpanelcore.beans.PanelEvent;
-import org.andreaesposito.buttonpanelcore.beans.SerialMessage;
+import org.andreaesposito.buttonpanel.beans.PanelEvent;
+import org.andreaesposito.buttonpanel.beans.SerialMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;

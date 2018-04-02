@@ -1,8 +1,8 @@
-package org.andreaesposito.buttonpanelcore.service;
+package org.andreaesposito.buttonpanel.service;
 
 import com.fazecast.jSerialComm.SerialPort;
-import org.andreaesposito.buttonpanelcore.beans.ButtonPanelConnectivity;
-import org.andreaesposito.buttonpanelcore.beans.SerialMessage;
+import org.andreaesposito.buttonpanel.beans.ButtonPanelConnectivity;
+import org.andreaesposito.buttonpanel.beans.SerialMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

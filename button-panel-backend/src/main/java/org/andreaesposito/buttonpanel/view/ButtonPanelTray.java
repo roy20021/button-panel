@@ -1,6 +1,6 @@
-package org.andreaesposito.buttonpanelcore.view;
+package org.andreaesposito.buttonpanel.view;
 
-import org.andreaesposito.buttonpanelcore.beans.ButtonPanelConnectivity;
+import org.andreaesposito.buttonpanel.beans.ButtonPanelConnectivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

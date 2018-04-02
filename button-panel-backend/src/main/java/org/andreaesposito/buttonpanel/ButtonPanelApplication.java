@@ -1,6 +1,6 @@
-package org.andreaesposito.buttonpanelcore;
+package org.andreaesposito.buttonpanel;
 
-import org.andreaesposito.buttonpanelcore.view.ButtonPanelTray;
+import org.andreaesposito.buttonpanel.view.ButtonPanelTray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
