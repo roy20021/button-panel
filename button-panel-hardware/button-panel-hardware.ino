@@ -23,16 +23,20 @@ bool lastSomethingChanged = false;
 unsigned long lastDebounceTime = 0;
 const unsigned long debounceDelay = 80; 
 
-char ledToTurnON = 'A';
-boolean fullLoad = false;
+const char noLedToTurnON = 'A';
+char ledToTurnON = noLedToTurnON;
+bool fullLoad = false;
+
+unsigned long lastKeepAlive = 0;
+const unsigned long keepAliveDelay = 4 * 60 * 1000; // 4 minutes 
 
 void setup() {
-Serial.begin(9600);
- while (!Serial) {
+  Serial.begin(9600);
+  while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
 
-  // Setup switches, button and leds  
+  // Setup switches, buttons and leds  
   for(int i = 0; i < switchesNumber; i++){
     pinMode(switches[i], INPUT_PULLUP);
     switchesStatus[i] = -1;
@@ -54,6 +58,11 @@ Serial.begin(9600);
 void loop() {
   unsigned long now = millis();
 
+  if((now - lastKeepAlive) > keepAliveDelay){
+     Serial.println("##Keep-Alive");
+     lastKeepAlive = now;
+  }  
+
   // Check if some leds have to be turned OFF
   for(int i = 0; i < ledsNumber; i++){
     if((now - ledsLastON[i]) > ledsTimeON){
@@ -62,26 +71,27 @@ void loop() {
   }
 
   // Turn ON request LED
-  if(ledToTurnON != 'A'){
+  if(ledToTurnON != noLedToTurnON){
     int index = ledToTurnON - '0' - 1;
     digitalWrite(leds[index], HIGH);
     ledsLastON[index] = now;
    
-    ledToTurnON = 'A';
+    ledToTurnON = noLedToTurnON;
   }
 
-  if(fullLoad){
+   if(fullLoad){
     fullLoad = false;
+    Serial.println("##Load");
     sendStatus();
   }
-
+  
   if((now - lastDebounceTime) > debounceDelay){ // Wait some time before read again
     lastDebounceTime = now;
   
     readInput(switches, switchesStatus, switchesNumber);
     readInput(buttons, buttonsStatus, buttonsNumber);  
 
-    if(somethingChanged ) {  
+    if(somethingChanged) {  
      somethingChanged = false;      
      sendStatus();
     }
@@ -147,3 +157,4 @@ void serialEvent() {
     }
   }
 }
+

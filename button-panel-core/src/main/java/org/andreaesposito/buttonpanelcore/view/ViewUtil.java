@@ -15,6 +15,10 @@ public class ViewUtil {
         return ViewUtil.createImage("trayicon.png", "Button Panel Tray Icon");
     }
 
+    public static Image createButtonPanelImageConnected() {
+        return ViewUtil.createImage("trayicon_connected.png", "Button Panel Tray Icon");
+    }
+
     //Obtain the image URL
     public static Image createImage(String path, String description) {
         URL imageURL = ButtonPanelTray.class.getClassLoader().getResource(path);

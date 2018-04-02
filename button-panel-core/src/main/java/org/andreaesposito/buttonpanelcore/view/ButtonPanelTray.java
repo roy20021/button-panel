@@ -1,9 +1,11 @@
 package org.andreaesposito.buttonpanelcore.view;
 
+import org.andreaesposito.buttonpanelcore.beans.ButtonPanelConnectivity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -12,12 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @Component
-public class ButtonPanelTray {
+public class ButtonPanelTray implements ApplicationListener<ButtonPanelConnectivity> {
 
     private static final Logger logger = LoggerFactory.getLogger(ButtonPanelTray.class);
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    final SystemTray tray = SystemTray.getSystemTray();
 
     public void show() {
         /* Use an appropriate Look and Feel */
@@ -47,7 +51,6 @@ public class ButtonPanelTray {
         final PopupMenu popup = new PopupMenu();
         final TrayIcon trayIcon =
                 new TrayIcon(ViewUtil.createButtonPanelImage());
-        final SystemTray tray = SystemTray.getSystemTray();
 
         // Create a popup menu components
         MenuItem searchItem = new MenuItem("Search Panel...");
@@ -83,5 +86,10 @@ public class ButtonPanelTray {
                 System.exit(0);
             }
         });
+    }
+
+    @Override
+    public void onApplicationEvent(ButtonPanelConnectivity event) {
+        tray.getTrayIcons()[0].setImage(event.isConnected() ? ViewUtil.createButtonPanelImageConnected() : ViewUtil.createButtonPanelImage());
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 @Component
 @Scope("prototype")
@@ -22,12 +24,28 @@ public class SearchPanelFrame extends JFrame {
 
     @PostConstruct
     private void init() {
+
+        String[] serialPorts = serialService.getSerialPorts();
+
+        if (serialPorts.length == 0) {
+            JOptionPane.showMessageDialog(null,
+                    "No Serial ports found! Is the button panel connected?",
+                    "No Serial ports",
+                    JOptionPane.ERROR_MESSAGE);
+            this.addWindowListener(new WindowAdapter() { // Dirty hack here for keeping logic in tray
+                @Override
+                public void windowOpened(WindowEvent e) {
+                    SearchPanelFrame.this.dispose();
+                }
+            });
+            return;
+        }
+
         this.setLayout(new FlowLayout());
 
         JLabel titleLabel = new JLabel("Select the serial port:");
         this.add(titleLabel);
 
-        String[] serialPorts = serialService.getSerialPorts();
         JComboBox<String> serialPortsComboBox = new JComboBox<>(serialPorts);
         this.add(serialPortsComboBox);
 

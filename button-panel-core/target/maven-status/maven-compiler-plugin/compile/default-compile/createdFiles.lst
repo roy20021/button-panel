@@ -1,0 +1,17 @@
+org\andreaesposito\buttonpanelcore\service\SerialTranslator.class
+org\andreaesposito\buttonpanelcore\beans\PanelEvent$SourceType.class
+org\andreaesposito\buttonpanelcore\beans\PanelEvent$State.class
+org\andreaesposito\buttonpanelcore\WebSocketConfig.class
+org\andreaesposito\buttonpanelcore\view\ButtonPanelTray$1.class
+org\andreaesposito\buttonpanelcore\beans\ButtonPanelConnectivity.class
+org\andreaesposito\buttonpanelcore\beans\SerialMessage.class
+org\andreaesposito\buttonpanelcore\view\SearchPanelFrame.class
+org\andreaesposito\buttonpanelcore\view\ButtonPanelTray$2.class
+org\andreaesposito\buttonpanelcore\service\SerialService.class
+org\andreaesposito\buttonpanelcore\view\ViewUtil.class
+org\andreaesposito\buttonpanelcore\view\SearchPanelFrame$1.class
+org\andreaesposito\buttonpanelcore\view\ButtonPanelTray.class
+org\andreaesposito\buttonpanelcore\service\StompService.class
+org\andreaesposito\buttonpanelcore\view\ButtonPanelTray$3.class
+org\andreaesposito\buttonpanelcore\ButtonPanelApplication.class
+org\andreaesposito\buttonpanelcore\beans\PanelEvent.class

@@ -1,11 +1,13 @@
 package org.andreaesposito.buttonpanelcore.beans;
 
-import org.andreaesposito.buttonpanelcore.beans.PanelState.State;
-
 public class PanelEvent {
 
     public enum SourceType {
-        BUTTON, SWITCH
+        BUTTON_A, BUTTON_B, BUTTON_C, BUTTON_D, SWITCH_A, SWITCH_B, SWITCH_C, SWITCH_D, TOGGLE_A, TOGGLE_B, TOGGLE_C
+    }
+
+    public enum State {
+        LEFT, RIGHT, UP, DOWN
     }
 
     private SourceType source;
